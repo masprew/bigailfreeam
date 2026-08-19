@@ -1018,301 +1018,304 @@
             </div>
         </div>
     </div>
-        <script>
-        // ============================================
-        // CONFIGURATION
-        // ============================================
-        const CONFIG = {
-            BASE_URL: '/api',
-            LIMIT_TOTAL: 45,
-            LIMIT_COST: {
-                'auto-activate': 3,
-                'send-magiclink': 1,
-                'verify-account': 1,
-                'apply-premium': 1
-            },
-            TIMEOUT: 30000
-        };
+<script>
+    // ============================================
+    // CONFIGURATION
+    // ============================================
+    const CONFIG = {
+        BASE_URL: '/api',
+        LIMIT_TOTAL: 45,
+        LIMIT_COST: {
+            'auto-activate': 3,
+            'send-magiclink': 1,
+            'verify-account': 1,
+            'apply-premium': 1
+        },
+        TIMEOUT: 30000
+    };
 
-        // ============================================
-        // THEMES
-        // ============================================
-        const themes = {
-            auto: {
-                primary: '#10b981',
-                secondary: '#059669',
-                orb1: '#10b981',
-                orb2: '#059669',
-                orb3: '#34d399'
-            },
-            magic: {
-                primary: '#3b82f6',
-                secondary: '#2563eb',
-                orb1: '#3b82f6',
-                orb2: '#2563eb',
-                orb3: '#60a5fa'
-            },
-            wizard: {
-                primary: '#ef4444',
-                secondary: '#dc2626',
-                orb1: '#ef4444',
-                orb2: '#dc2626',
-                orb3: '#f87171'
-            },
-            history: {
-                primary: '#f59e0b',
-                secondary: '#d97706',
-                orb1: '#f59e0b',
-                orb2: '#d97706',
-                orb3: '#fbbf24'
-            }
-        };
-
-        // ============================================
-        // STATE
-        // ============================================
-        let currentMethod = 'auto';
-        let activationHistory = JSON.parse(localStorage.getItem('am_history') || '[]');
-        let wizardData = {};
-        let lastAccount = null;
-        let isTransitioning = false;
-
-        // ============================================
-        // METHOD SWITCHING
-        // ============================================
-        function switchMethod(method) {
-            if (isTransitioning || method === currentMethod) return;
-            isTransitioning = true;
-            
-            const theme = themes[method];
-            
-            fadeToBlack(() => {
-                applyTheme(method, theme);
-                
-                document.querySelectorAll('.method-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                    if (btn.dataset.method === method) btn.classList.add('active');
-                });
-                
-                document.getElementById('autoContent').style.display = method === 'auto' ? 'block' : 'none';
-                document.getElementById('magicContent').style.display = method === 'magic' ? 'block' : 'none';
-                document.getElementById('wizardContent').style.display = method === 'wizard' ? 'block' : 'none';
-                document.getElementById('historyContent').style.display = method === 'history' ? 'block' : 'none';
-                
-                currentMethod = method;
-                
-                if (method === 'history') {
-                    renderHistory();
-                }
-                
-                setTimeout(fadeInTheme, 100);
-            });
+    // ============================================
+    // THEMES
+    // ============================================
+    const themes = {
+        auto: {
+            primary: '#10b981',
+            secondary: '#059669',
+            orb1: '#10b981',
+            orb2: '#059669',
+            orb3: '#34d399'
+        },
+        magic: {
+            primary: '#3b82f6',
+            secondary: '#2563eb',
+            orb1: '#3b82f6',
+            orb2: '#2563eb',
+            orb3: '#60a5fa'
+        },
+        wizard: {
+            primary: '#ef4444',
+            secondary: '#dc2626',
+            orb1: '#ef4444',
+            orb2: '#dc2626',
+            orb3: '#f87171'
+        },
+        history: {
+            primary: '#f59e0b',
+            secondary: '#d97706',
+            orb1: '#f59e0b',
+            orb2: '#d97706',
+            orb3: '#fbbf24'
         }
+    };
 
-        // ============================================
-        // TRANSITION FUNCTIONS
-        // ============================================
-        function fadeToBlack(callback) {
-            const elements = getTransitionElements();
+    // ============================================
+    // STATE
+    // ============================================
+    let currentMethod = 'auto';
+    let activationHistory = JSON.parse(localStorage.getItem('am_history') || '[]');
+    let wizardData = {};
+    let lastAccount = null;
+    let isTransitioning = false;
+
+    // ============================================
+    // METHOD SWITCHING
+    // ============================================
+    function switchMethod(method) {
+        if (isTransitioning || method === currentMethod) return;
+        isTransitioning = true;
+        
+        const theme = themes[method];
+        
+        fadeToBlack(() => {
+            applyTheme(method, theme);
             
-            elements.forEach(el => {
-                if (el) {
-                    el.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
-                    el.style.opacity = '0';
-                    el.style.filter = 'blur(8px)';
-                    el.style.transform = 'scale(0.95)';
-                }
+            document.querySelectorAll('.method-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.method === method) btn.classList.add('active');
             });
             
-            setTimeout(callback, 500);
-        }
-
-        function applyTheme(method, theme) {
-            document.getElementById('orb1').style.background = theme.orb1;
-            document.getElementById('orb2').style.background = theme.orb2;
-            document.getElementById('orb3').style.background = theme.orb3;
+            document.getElementById('autoContent').style.display = method === 'auto' ? 'block' : 'none';
+            document.getElementById('magicContent').style.display = method === 'magic' ? 'block' : 'none';
+            document.getElementById('wizardContent').style.display = method === 'wizard' ? 'block' : 'none';
+            document.getElementById('historyContent').style.display = method === 'history' ? 'block' : 'none';
             
-            const heroIcon = document.getElementById('heroIcon');
-            heroIcon.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
-            heroIcon.style.boxShadow = `0 20px 60px ${theme.primary}40`;
+            currentMethod = method;
             
-            const heroTitle = document.getElementById('heroTitle');
-            heroTitle.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
-            heroTitle.style.webkitBackgroundClip = 'text';
-            heroTitle.style.webkitTextFillColor = 'transparent';
-            heroTitle.style.backgroundClip = 'text';
-            
-            const limitInfo = document.getElementById('limitInfo');
-            limitInfo.style.border = `1px solid ${theme.primary}33`;
-            limitInfo.style.background = `${theme.primary}08`;
-            
-            document.querySelectorAll('.limit-item .number').forEach(el => {
-                el.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
-                el.style.webkitBackgroundClip = 'text';
-                el.style.webkitTextFillColor = 'transparent';
-                el.style.backgroundClip = 'text';
-            });
-            
-            document.querySelectorAll('.method-title').forEach(el => {
-                el.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
-                el.style.webkitBackgroundClip = 'text';
-                el.style.webkitTextFillColor = 'transparent';
-                el.style.backgroundClip = 'text';
-            });
-            
-            document.getElementById('footerName').style.color = theme.primary;
-        }
-
-        function fadeInTheme() {
-            const elements = getTransitionElements();
-            
-            elements.forEach((el, index) => {
-                if (el) {
-                    setTimeout(() => {
-                        el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-                        el.style.opacity = '1';
-                        el.style.filter = 'blur(0px)';
-                        el.style.transform = 'scale(1)';
-                    }, index * 80);
-                }
-            });
-            
-            setTimeout(() => {
-                document.getElementById('orb1').style.opacity = '0.2';
-                document.getElementById('orb2').style.opacity = '0.2';
-                document.getElementById('orb3').style.opacity = '0.2';
-                isTransitioning = false;
-            }, 600);
-        }
-
-        function getTransitionElements() {
-            return [
-                document.getElementById('heroIcon'),
-                document.getElementById('heroTitle'),
-                document.getElementById('mainCard'),
-                document.getElementById('limitInfo'),
-                document.getElementById('orb1'),
-                document.getElementById('orb2'),
-                document.getElementById('orb3'),
-                document.getElementById('footerName')
-            ];
-        }
-
-        // ============================================
-        // LIMIT MANAGEMENT
-        // ============================================
-        function updateLimit() {
-            const used = activationHistory.reduce((total, item) => total + (item.limitCost || 0), 0);
-            const remaining = Math.max(0, CONFIG.LIMIT_TOTAL - used);
-            
-            document.getElementById('limitUsed').textContent = used;
-            document.getElementById('limitRemaining').textContent = remaining;
-            
-            return remaining;
-        }
-
-        function checkLimit(endpoint) {
-            const cost = CONFIG.LIMIT_COST[endpoint] || 1;
-            const remaining = updateLimit();
-            
-            if (remaining < cost) {
-                alert(`Limit tidak cukup! Butuh ${cost} limit, sisa ${remaining} limit.`);
-                return false;
+            if (method === 'history') {
+                renderHistory();
             }
             
-            return true;
-        }
+            setTimeout(fadeInTheme, 100);
+        });
+    }
 
-        // ============================================
-        // LOADING PROGRESS
-        // ============================================
-        function showProgress() {
-            document.getElementById('loadingProgress').classList.add('show');
-            
-            let progress = 0;
-            const messages = [
-                'Membuat akun...',
-                'Mengirim verifikasi...',
-                'Mengaktifkan premium...',
-                'Menyimpan data...'
-            ];
-            
-            const interval = setInterval(() => {
-                progress += Math.floor(Math.random() * 10) + 3;
-                if (progress > 90) progress = 90;
-                
-                document.getElementById('progressFill').style.width = progress + '%';
-                document.getElementById('progressText').textContent = progress + '%';
-                
-                const messageIndex = Math.floor(progress / 25);
-                document.getElementById('progressMessage').textContent = messages[messageIndex] || messages[3];
-            }, 500);
-            
-            return interval;
-        }
+    // ============================================
+    // TRANSITION FUNCTIONS
+    // ============================================
+    function fadeToBlack(callback) {
+        const elements = getTransitionElements();
+        
+        elements.forEach(el => {
+            if (el) {
+                el.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+                el.style.opacity = '0';
+                el.style.filter = 'blur(8px)';
+                el.style.transform = 'scale(0.95)';
+            }
+        });
+        
+        setTimeout(callback, 500);
+    }
 
-        function completeProgress(interval) {
-            clearInterval(interval);
-            
-            document.getElementById('progressFill').style.width = '100%';
-            document.getElementById('progressText').textContent = '100%';
-            document.getElementById('progressMessage').textContent = 'Selesai!';
-            
-            setTimeout(() => {
-                document.getElementById('loadingProgress').classList.remove('show');
-                document.getElementById('progressFill').style.width = '0%';
-                document.getElementById('progressText').textContent = '0%';
-            }, 1000);
-        }
+    function applyTheme(method, theme) {
+        document.getElementById('orb1').style.background = theme.orb1;
+        document.getElementById('orb2').style.background = theme.orb2;
+        document.getElementById('orb3').style.background = theme.orb3;
+        
+        const heroIcon = document.getElementById('heroIcon');
+        heroIcon.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
+        heroIcon.style.boxShadow = `0 20px 60px ${theme.primary}40`;
+        
+        const heroTitle = document.getElementById('heroTitle');
+        heroTitle.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
+        heroTitle.style.webkitBackgroundClip = 'text';
+        heroTitle.style.webkitTextFillColor = 'transparent';
+        heroTitle.style.backgroundClip = 'text';
+        
+        const limitInfo = document.getElementById('limitInfo');
+        limitInfo.style.border = `1px solid ${theme.primary}33`;
+        limitInfo.style.background = `${theme.primary}08`;
+        
+        document.querySelectorAll('.limit-item .number').forEach(el => {
+            el.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
+            el.style.webkitBackgroundClip = 'text';
+            el.style.webkitTextFillColor = 'transparent';
+            el.style.backgroundClip = 'text';
+        });
+        
+        document.querySelectorAll('.method-title').forEach(el => {
+            el.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
+            el.style.webkitBackgroundClip = 'text';
+            el.style.webkitTextFillColor = 'transparent';
+            el.style.backgroundClip = 'text';
+        });
+        
+        document.getElementById('footerName').style.color = theme.primary;
+    }
 
-        // ============================================
-        // POPUP FUNCTIONS
-        // ============================================
-        function showSuccessPopup(account) {
-            lastAccount = account;
+    function fadeInTheme() {
+        const elements = getTransitionElements();
+        
+        elements.forEach((el, index) => {
+            if (el) {
+                setTimeout(() => {
+                    el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                    el.style.opacity = '1';
+                    el.style.filter = 'blur(0px)';
+                    el.style.transform = 'scale(1)';
+                }, index * 80);
+            }
+        });
+        
+        setTimeout(() => {
+            document.getElementById('orb1').style.opacity = '0.2';
+            document.getElementById('orb2').style.opacity = '0.2';
+            document.getElementById('orb3').style.opacity = '0.2';
+            isTransitioning = false;
+        }, 600);
+    }
+
+    function getTransitionElements() {
+        return [
+            document.getElementById('heroIcon'),
+            document.getElementById('heroTitle'),
+            document.getElementById('mainCard'),
+            document.getElementById('limitInfo'),
+            document.getElementById('orb1'),
+            document.getElementById('orb2'),
+            document.getElementById('orb3'),
+            document.getElementById('footerName')
+        ];
+    }
+
+    // ============================================
+    // LIMIT MANAGEMENT
+    // ============================================
+    function updateLimit() {
+        const used = activationHistory.reduce((total, item) => {
+            return total + (item.limitCost || 0);
+        }, 0);
+        
+        const remaining = Math.max(0, CONFIG.LIMIT_TOTAL - used);
+        
+        document.getElementById('limitUsed').textContent = used;
+        document.getElementById('limitRemaining').textContent = remaining;
+        
+        return remaining;
+    }
+
+    function checkLimit(endpoint) {
+        const cost = CONFIG.LIMIT_COST[endpoint] || 1;
+        const remaining = updateLimit();
+        
+        if (remaining < cost) {
+            alert(`Limit tidak cukup! Butuh ${cost} limit, sisa ${remaining} limit.`);
+            return false;
+        }
+        
+        return true;
+    }
+
+    // ============================================
+    // LOADING PROGRESS
+    // ============================================
+    function showProgress() {
+        document.getElementById('loadingProgress').classList.add('show');
+        
+        let progress = 0;
+        const messages = [
+            'Membuat akun...',
+            'Mengirim verifikasi...',
+            'Mengaktifkan premium...',
+            'Menyimpan data...'
+        ];
+        
+        const interval = setInterval(() => {
+            progress += Math.floor(Math.random() * 10) + 3;
+            if (progress > 90) progress = 90;
             
-            document.getElementById('popupTitle').textContent = 'Akun Berhasil Dibuat!';
-            document.getElementById('popupMessage').textContent = 'Cek history untuk melihat detail akun.';
-            document.getElementById('popupAccountInfo').innerHTML = `
-                <div>
-                    <span class="label">Email</span>
-                    <span class="value">${account.email}</span>
-                </div>
-                <div>
-                    <span class="label">Password</span>
-                    <span class="value">${account.password}</span>
-                </div>
-                <div>
-                    <span class="label">Dibuat</span>
-                    <span class="value">${new Date(account.createdAt).toLocaleString('id-ID')}</span>
-                </div>
-                <div>
-                    <span class="label">Expired</span>
-                    <span class="value">${new Date(account.expiresAt).toLocaleDateString('id-ID')}</span>
-                </div>
-                <div>
-                    <span class="label">Metode</span>
-                    <span class="value">${account.method}</span>
-                </div>
-            `;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = progress + '%';
             
-            document.getElementById('popupOverlay').classList.add('show');
-        }
+            const messageIndex = Math.floor(progress / 25);
+            document.getElementById('progressMessage').textContent = messages[messageIndex] || messages[3];
+        }, 500);
+        
+        return interval;
+    }
 
-        function closePopup() {
-            document.getElementById('popupOverlay').classList.remove('show');
-        }
+    function completeProgress(interval) {
+        clearInterval(interval);
+        
+        document.getElementById('progressFill').style.width = '100%';
+        document.getElementById('progressText').textContent = '100%';
+        document.getElementById('progressMessage').textContent = 'Selesai!';
+        
+        setTimeout(() => {
+            document.getElementById('loadingProgress').classList.remove('show');
+            document.getElementById('progressFill').style.width = '0%';
+            document.getElementById('progressText').textContent = '0%';
+        }, 1000);
+    }
 
-        function goToHistory() {
-            closePopup();
-            switchMethod('history');
-        }
+    // ============================================
+    // POPUP FUNCTIONS
+    // ============================================
+    function showSuccessPopup(account) {
+        lastAccount = account;
+        
+        document.getElementById('popupTitle').textContent = 'Akun Berhasil Dibuat!';
+        document.getElementById('popupMessage').textContent = 'Cek history untuk melihat detail akun.';
+        document.getElementById('popupAccountInfo').innerHTML = `
+            <div>
+                <span class="label">Email</span>
+                <span class="value">${account.email}</span>
+            </div>
+            <div>
+                <span class="label">Password</span>
+                <span class="value">${account.password}</span>
+            </div>
+            <div>
+                <span class="label">Dibuat</span>
+                <span class="value">${new Date(account.createdAt).toLocaleString('id-ID')}</span>
+            </div>
+            <div>
+                <span class="label">Expired</span>
+                <span class="value">${new Date(account.expiresAt).toLocaleDateString('id-ID')}</span>
+            </div>
+            <div>
+                <span class="label">Metode</span>
+                <span class="value">${account.method}</span>
+            </div>
+        `;
+        
+        document.getElementById('popupOverlay').classList.add('show');
+    }
 
-        // ============================================
-        // COPY FUNCTIONS
-        // ============================================
-        function formatAccountText(account) {
-            return `================================
+    function closePopup() {
+        document.getElementById('popupOverlay').classList.remove('show');
+    }
+
+    function goToHistory() {
+        closePopup();
+        switchMethod('history');
+    }
+
+    // ============================================
+    // COPY FUNCTIONS
+    // ============================================
+    function formatAccountText(account) {
+        return `================================
 AM PREMIUM ACTIVATOR
 ================================
 
@@ -1326,332 +1329,344 @@ Metode      : ${account.method}
 ================================
 By Dantz 4bigail
 ================================`;
-        }
+    }
 
-        function copyLastAccount() {
-            if (!lastAccount) return;
-            
-            const text = formatAccountText(lastAccount);
-            
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Detail akun berhasil di-copy!');
-            }).catch(() => {
-                alert('Gagal copy, coba manual.');
-            });
-        }
+    function copyLastAccount() {
+        if (!lastAccount) return;
+        
+        const text = formatAccountText(lastAccount);
+        
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Detail akun berhasil di-copy!');
+        }).catch(() => {
+            alert('Gagal copy, coba manual.');
+        });
+    }
 
-        function copyHistoryAccount(id) {
-            const account = activationHistory.find(a => a.id === id);
-            if (!account) return;
-            
-            const text = formatAccountText(account);
-            
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Detail akun berhasil di-copy!');
-            }).catch(() => {
-                alert('Gagal copy, coba manual.');
-            });
-        }
+    function copyHistoryAccount(id) {
+        const account = activationHistory.find(a => a.id === id);
+        if (!account) return;
+        
+        const text = formatAccountText(account);
+        
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Detail akun berhasil di-copy!');
+        }).catch(() => {
+            alert('Gagal copy, coba manual.');
+        });
+    }
 
-        // ============================================
-        // HISTORY FUNCTIONS
-        // ============================================
-        function renderHistory() {
-            const list = document.getElementById('historyList');
-            
-            if (activationHistory.length === 0) {
-                list.innerHTML = '<p style="color:var(--text2);text-align:center;padding:20px;">Belum ada riwayat aktivasi</p>';
-                return;
-            }
-            
-            list.innerHTML = activationHistory.map(item => `
-                <div class="history-card">
-                    <div class="history-card-header">
-                        <span class="history-email">${item.email}</span>
-                        <span class="history-method ${item.method}">${item.method}</span>
+    // ============================================
+    // HISTORY FUNCTIONS
+    // ============================================
+    function renderHistory() {
+        const list = document.getElementById('historyList');
+        
+        if (activationHistory.length === 0) {
+            list.innerHTML = '<p style="color:var(--text2);text-align:center;padding:20px;">Belum ada riwayat aktivasi</p>';
+            return;
+        }
+        
+        list.innerHTML = activationHistory.map(item => `
+            <div class="history-card">
+                <div class="history-card-header">
+                    <span class="history-email">${item.email}</span>
+                    <span class="history-method ${item.method}">${item.method}</span>
+                </div>
+                <div class="history-card-body">
+                    <div class="history-info">
+                        <div class="info-label">Password</div>
+                        <div class="info-value">${item.password}</div>
                     </div>
-                    <div class="history-card-body">
-                        <div class="history-info">
-                            <div class="info-label">Password</div>
-                            <div class="info-value">${item.password}</div>
-                        </div>
-                        <div class="history-info">
-                            <div class="info-label">Dibuat</div>
-                            <div class="info-value">${new Date(item.createdAt).toLocaleString('id-ID')}</div>
-                        </div>
-                        <div class="history-info">
-                            <div class="info-label">Expired</div>
-                            <div class="info-value">${new Date(item.expiresAt).toLocaleDateString('id-ID')}</div>
-                        </div>
-                        <div class="history-info">
-                            <div class="info-label">Status</div>
-                            <div class="info-value">${item.status === 'active' ? 'Aktif' : 'Expired'}</div>
-                        </div>
+                    <div class="history-info">
+                        <div class="info-label">Dibuat</div>
+                        <div class="info-value">${new Date(item.createdAt).toLocaleString('id-ID')}</div>
                     </div>
-                    <div class="history-card-actions">
-                        <button class="copy-btn" onclick="copyHistoryAccount(${item.id})">Copy</button>
-                        <button class="delete-btn" onclick="deleteHistory(${item.id})">Hapus</button>
+                    <div class="history-info">
+                        <div class="info-label">Expired</div>
+                        <div class="info-value">${new Date(item.expiresAt).toLocaleDateString('id-ID')}</div>
+                    </div>
+                    <div class="history-info">
+                        <div class="info-label">Status</div>
+                        <div class="info-value">${item.status === 'active' ? 'Aktif' : 'Expired'}</div>
                     </div>
                 </div>
-            `).join('');
-        }
+                <div class="history-card-actions">
+                    <button class="copy-btn" onclick="copyHistoryAccount(${item.id})">Copy</button>
+                    <button class="delete-btn" onclick="deleteHistory(${item.id})">Hapus</button>
+                </div>
+            </div>
+        `).join('');
+    }
 
-        function deleteHistory(id) {
-            if (!confirm('Hapus riwayat ini?')) return;
-            
-            activationHistory = activationHistory.filter(item => item.id !== id);
-            localStorage.setItem('am_history', JSON.stringify(activationHistory));
-            updateLimit();
-            renderHistory();
-        }
-
-        function addHistory(email, password, method) {
-            const account = {
-                id: Date.now(),
-                email: email,
-                password: password,
-                method: method,
-                limitCost: method === 'auto' ? 3 : 1,
-                createdAt: new Date().toISOString(),
-                expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-                status: 'active'
-            };
-            
-            activationHistory.unshift(account);
-            localStorage.setItem('am_history', JSON.stringify(activationHistory));
-            updateLimit();
-            
-            return account;
-        }
-
-        // ============================================
-        // API FUNCTIONS
-        // ============================================
-        async function apiCall(endpoint, data) {
-            const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), CONFIG.TIMEOUT);
-            
-            try {
-                const response = await fetch(`${CONFIG.BASE_URL}/${endpoint}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data),
-                    signal: controller.signal
-                });
-                
-                clearTimeout(timeout);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                
-                return await response.json();
-                
-            } catch (error) {
-                clearTimeout(timeout);
-                
-                if (error.name === 'AbortError') {
-                    throw new Error('Timeout! Server tidak merespon.');
-                }
-                
-                throw error;
-            }
-        }
-
-        function isSuccess(result) {
-            return result && result.success === true;
-        }
-
-        // ============================================
-        // ACTIVATION FUNCTIONS
-        // ============================================
-        async function activateAuto() {
-            if (!checkLimit('auto-activate')) return;
-            
-            const password = document.getElementById('passwordAuto').value;
-            
-            if (!password) {
-                alert('Password wajib diisi!');
-                return;
-            }
-            
-            const interval = showProgress();
-            
-            try {
-                const result = await apiCall('auto-activate', { password });
-                completeProgress(interval);
-                
-                if (isSuccess(result)) {
-                    const account = addHistory(result.email || 'Unknown', password, 'auto');
-                    showSuccessPopup(account);
-                } else {
-                    alert(result.message || 'Gagal aktivasi!');
-                }
-                
-            } catch (error) {
-                completeProgress(interval);
-                alert('Error: ' + error.message);
-            }
-        }
-
-        async function sendMagic() {
-            if (!checkLimit('send-magiclink')) return;
-            
-            const email = document.getElementById('emailMagic').value;
-            
-            if (!email) {
-                alert('Email wajib diisi!');
-                return;
-            }
-            
-            const interval = showProgress();
-            
-            try {
-                const result = await apiCall('send-magiclink', { email });
-                completeProgress(interval);
-                
-                if (isSuccess(result)) {
-                    addHistory(email, '-', 'magic');
-                    alert('Magic link terkirim ke ' + email);
-                } else {
-                    alert(result.message || 'Gagal mengirim link!');
-                }
-                
-            } catch (error) {
-                completeProgress(interval);
-                alert('Error: ' + error.message);
-            }
-        }
-
-        // ============================================
-        // WIZARD FUNCTIONS
-        // ============================================
-        async function wizardStep1() {
-            if (!checkLimit('send-magiclink')) return;
-            
-            const email = document.getElementById('emailWizard').value;
-            
-            if (!email) {
-                alert('Email wajib diisi!');
-                return;
-            }
-            
-            const interval = showProgress();
-            
-            try {
-                const result = await apiCall('send-magiclink', { email });
-                completeProgress(interval);
-                
-                if (isSuccess(result)) {
-                    wizardData.email = email;
-                    
-                    document.getElementById('wizardStep1').style.display = 'none';
-                    document.getElementById('wizardStep2').style.display = 'block';
-                    document.getElementById('wStep1').className = 'step done';
-                    document.getElementById('wStep2').className = 'step active';
-                    
-                    alert('Link terkirim! Cek email kamu.');
-                } else {
-                    alert(result.message || 'Gagal mengirim link!');
-                }
-                
-            } catch (error) {
-                completeProgress(interval);
-                alert('Error: ' + error.message);
-            }
-        }
-
-        async function wizardStep2() {
-            if (!checkLimit('verify-account')) return;
-            
-            const rawLink = document.getElementById('rawLinkWizard').value;
-            
-            if (!rawLink) {
-                alert('Raw link wajib diisi!');
-                return;
-            }
-            
-            const interval = showProgress();
-            
-            try {
-                const result = await apiCall('verify-account', {
-                    email: wizardData.email,
-                    rawLink: rawLink
-                });
-                completeProgress(interval);
-                
-                if (isSuccess(result)) {
-                    wizardData.idToken = result.idToken;
-                    
-                    document.getElementById('wizardStep2').style.display = 'none';
-                    document.getElementById('wizardStep3').style.display = 'block';
-                    document.getElementById('wStep2').className = 'step done';
-                    document.getElementById('wStep3').className = 'step active';
-                    
-                    document.getElementById('idTokenWizard').value = result.idToken || '';
-                    
-                    alert('Verifikasi berhasil!');
-                } else {
-                    alert(result.message || 'Verifikasi gagal!');
-                }
-                
-            } catch (error) {
-                completeProgress(interval);
-                alert('Error: ' + error.message);
-            }
-        }
-
-        async function wizardStep3() {
-            if (!checkLimit('apply-premium')) return;
-            
-            const idToken = document.getElementById('idTokenWizard').value;
-            
-            if (!idToken) {
-                alert('ID Token wajib diisi!');
-                return;
-            }
-            
-            const interval = showProgress();
-            
-            try {
-                const result = await apiCall('apply-premium', {
-                    email: wizardData.email,
-                    idToken: idToken
-                });
-                completeProgress(interval);
-                
-                if (isSuccess(result)) {
-                    const account = addHistory(wizardData.email, '-', 'wizard');
-                    showSuccessPopup(account);
-                    
-                    setTimeout(() => {
-                        wizardData = {};
-                        document.getElementById('wizardStep3').style.display = 'none';
-                        document.getElementById('wizardStep1').style.display = 'block';
-                        document.getElementById('wStep1').className = 'step active';
-                        document.getElementById('wStep2').className = 'step';
-                        document.getElementById('wStep3').className = 'step';
-                        document.getElementById('emailWizard').value = '';
-                        document.getElementById('rawLinkWizard').value = '';
-                        document.getElementById('idTokenWizard').value = '';
-                    }, 2000);
-                } else {
-                    alert(result.message || 'Gagal apply premium!');
-                }
-                
-            } catch (error) {
-                completeProgress(interval);
-                alert('Error: ' + error.message);
-            }
-        }
-
-        // ============================================
-        // INITIALIZATION
-        // ============================================
+    function deleteHistory(id) {
+        if (!confirm('Hapus riwayat ini?')) return;
+        
+        activationHistory = activationHistory.filter(item => item.id !== id);
+        localStorage.setItem('am_history', JSON.stringify(activationHistory));
         updateLimit();
         renderHistory();
-    </script>
+    }
+
+    function addHistory(email, password, method, endpoint) {
+        const LIMIT_COST_MAP = {
+            'auto-activate': 3,
+            'send-magiclink': 1,
+            'verify-account': 1,
+            'apply-premium': 1
+        };
+        
+        const limitCost = LIMIT_COST_MAP[endpoint] || 1;
+        
+        const account = {
+            id: Date.now(),
+            email: email,
+            password: password,
+            method: method,
+            endpoint: endpoint || method,
+            limitCost: limitCost,
+            createdAt: new Date().toISOString(),
+            expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+            status: 'active'
+        };
+        
+        activationHistory.unshift(account);
+        localStorage.setItem('am_history', JSON.stringify(activationHistory));
+        updateLimit();
+        
+        return account;
+    }
+
+    // ============================================
+    // API FUNCTIONS
+    // ============================================
+    async function apiCall(endpoint, data) {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), CONFIG.TIMEOUT);
+        
+        try {
+            const response = await fetch(`${CONFIG.BASE_URL}/${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data),
+                signal: controller.signal
+            });
+            
+            clearTimeout(timeout);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            
+            return await response.json();
+            
+        } catch (error) {
+            clearTimeout(timeout);
+            
+            if (error.name === 'AbortError') {
+                throw new Error('Timeout! Server tidak merespon.');
+            }
+            
+            throw error;
+        }
+    }
+
+    function isSuccess(result) {
+        return result && result.success === true;
+    }
+
+    // ============================================
+    // ACTIVATION FUNCTIONS
+    // ============================================
+    async function activateAuto() {
+        if (!checkLimit('auto-activate')) return;
+        
+        const password = document.getElementById('passwordAuto').value;
+        
+        if (!password) {
+            alert('Password wajib diisi!');
+            return;
+        }
+        
+        const interval = showProgress();
+        
+        try {
+            const result = await apiCall('auto-activate', { password });
+            completeProgress(interval);
+            
+            if (isSuccess(result)) {
+                const account = addHistory(result.email || 'Unknown', password, 'auto', 'auto-activate');
+                showSuccessPopup(account);
+            } else {
+                alert(result.message || 'Gagal aktivasi!');
+            }
+            
+        } catch (error) {
+            completeProgress(interval);
+            alert('Error: ' + error.message);
+        }
+    }
+
+    async function sendMagic() {
+        if (!checkLimit('send-magiclink')) return;
+        
+        const email = document.getElementById('emailMagic').value;
+        
+        if (!email) {
+            alert('Email wajib diisi!');
+            return;
+        }
+        
+        const interval = showProgress();
+        
+        try {
+            const result = await apiCall('send-magiclink', { email });
+            completeProgress(interval);
+            
+            if (isSuccess(result)) {
+                addHistory(email, '-', 'magic', 'send-magiclink');
+                alert('Magic link terkirim ke ' + email);
+            } else {
+                alert(result.message || 'Gagal mengirim link!');
+            }
+            
+        } catch (error) {
+            completeProgress(interval);
+            alert('Error: ' + error.message);
+        }
+    }
+
+    // ============================================
+    // WIZARD FUNCTIONS
+    // ============================================
+    async function wizardStep1() {
+        if (!checkLimit('send-magiclink')) return;
+        
+        const email = document.getElementById('emailWizard').value;
+        
+        if (!email) {
+            alert('Email wajib diisi!');
+            return;
+        }
+        
+        const interval = showProgress();
+        
+        try {
+            const result = await apiCall('send-magiclink', { email });
+            completeProgress(interval);
+            
+            if (isSuccess(result)) {
+                wizardData.email = email;
+                addHistory(email, '-', 'wizard', 'send-magiclink');
+                
+                document.getElementById('wizardStep1').style.display = 'none';
+                document.getElementById('wizardStep2').style.display = 'block';
+                document.getElementById('wStep1').className = 'step done';
+                document.getElementById('wStep2').className = 'step active';
+                
+                alert('Link terkirim! Cek email kamu.');
+            } else {
+                alert(result.message || 'Gagal mengirim link!');
+            }
+            
+        } catch (error) {
+            completeProgress(interval);
+            alert('Error: ' + error.message);
+        }
+    }
+
+    async function wizardStep2() {
+        if (!checkLimit('verify-account')) return;
+        
+        const rawLink = document.getElementById('rawLinkWizard').value;
+        
+        if (!rawLink) {
+            alert('Raw link wajib diisi!');
+            return;
+        }
+        
+        const interval = showProgress();
+        
+        try {
+            const result = await apiCall('verify-account', {
+                email: wizardData.email,
+                rawLink: rawLink
+            });
+            completeProgress(interval);
+            
+            if (isSuccess(result)) {
+                wizardData.idToken = result.idToken;
+                addHistory(wizardData.email, '-', 'wizard', 'verify-account');
+                
+                document.getElementById('wizardStep2').style.display = 'none';
+                document.getElementById('wizardStep3').style.display = 'block';
+                document.getElementById('wStep2').className = 'step done';
+                document.getElementById('wStep3').className = 'step active';
+                
+                document.getElementById('idTokenWizard').value = result.idToken || '';
+                
+                alert('Verifikasi berhasil!');
+            } else {
+                alert(result.message || 'Verifikasi gagal!');
+            }
+            
+        } catch (error) {
+            completeProgress(interval);
+            alert('Error: ' + error.message);
+        }
+    }
+
+    async function wizardStep3() {
+        if (!checkLimit('apply-premium')) return;
+        
+        const idToken = document.getElementById('idTokenWizard').value;
+        
+        if (!idToken) {
+            alert('ID Token wajib diisi!');
+            return;
+        }
+        
+        const interval = showProgress();
+        
+        try {
+            const result = await apiCall('apply-premium', {
+                email: wizardData.email,
+                idToken: idToken
+            });
+            completeProgress(interval);
+            
+            if (isSuccess(result)) {
+                const account = addHistory(wizardData.email, '-', 'wizard', 'apply-premium');
+                showSuccessPopup(account);
+                
+                setTimeout(() => {
+                    wizardData = {};
+                    document.getElementById('wizardStep3').style.display = 'none';
+                    document.getElementById('wizardStep1').style.display = 'block';
+                    document.getElementById('wStep1').className = 'step active';
+                    document.getElementById('wStep2').className = 'step';
+                    document.getElementById('wStep3').className = 'step';
+                    document.getElementById('emailWizard').value = '';
+                    document.getElementById('rawLinkWizard').value = '';
+                    document.getElementById('idTokenWizard').value = '';
+                }, 2000);
+            } else {
+                alert(result.message || 'Gagal apply premium!');
+            }
+            
+        } catch (error) {
+            completeProgress(interval);
+            alert('Error: ' + error.message);
+        }
+    }
+
+    // ============================================
+    // INITIALIZATION
+    // ============================================
+    updateLimit();
+    renderHistory();
+</script>
 </body>
 </html>
