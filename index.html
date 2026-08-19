@@ -1,0 +1,993 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AM Premium Activator - Dantz 4bigail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --card: #141414;
+            --border: #2a2a2a;
+            --text: #ffffff;
+            --text2: #9ca3af;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+            transition: background-color 0.8s ease;
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 0;
+            transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .orb-1 { width: 400px; height: 400px; top: -100px; left: -100px; animation: float 8s infinite; }
+        .orb-2 { width: 300px; height: 300px; bottom: -50px; right: -50px; animation: float 10s infinite reverse; }
+        .orb-3 { width: 200px; height: 200px; top: 50%; left: 50%; animation: float 6s infinite; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -30px); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeDown 0.8s ease;
+        }
+
+        .hero-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            animation: pulse 2s infinite;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hero p {
+            color: var(--text2);
+            font-size: 14px;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hero .owner {
+            margin-top: 10px;
+            font-size: 11px;
+            color: #6b7280;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .main-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: fadeUp 0.8s ease 0.2s both;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .limit-info {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 12px;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .limit-item {
+            flex: 1;
+            text-align: center;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .limit-item .number {
+            font-size: 24px;
+            font-weight: 800;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .limit-item .label {
+            font-size: 11px;
+            color: var(--text2);
+            margin-top: 3px;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .method-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+            padding: 5px;
+            background: var(--bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .method-btn {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: var(--text2);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .method-btn:hover {
+            color: var(--text);
+        }
+
+        .method-btn.active {
+            color: white;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            animation: scaleIn 0.3s ease;
+        }
+
+        .method-btn[data-method="auto"].active {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .method-btn[data-method="magic"].active {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+
+        .method-btn[data-method="wizard"].active {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.95); }
+            to { transform: scale(1); }
+        }
+
+        .content-area {
+            animation: slideIn 0.5s ease;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .method-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .method-desc {
+            font-size: 13px;
+            color: var(--text2);
+            margin-bottom: 20px;
+            line-height: 1.6;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text2);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 14px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.05);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-green { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 10px 30px rgba(16,185,129,0.3); }
+        .btn-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); box-shadow: 0 10px 30px rgba(59,130,246,0.3); }
+        .btn-red { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 10px 30px rgba(239,68,68,0.3); }
+
+        .steps {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: var(--bg);
+            border-radius: 8px;
+            font-size: 11px;
+            color: var(--text2);
+            transition: all 0.3s;
+            border: 1px solid var(--border);
+        }
+
+        .step.active {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            border-color: #ef4444;
+            font-weight: 700;
+        }
+
+        .step.done {
+            background: rgba(16,185,129,0.1);
+            color: #10b981;
+            border-color: #10b981;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .loading.show { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 10px;
+            transition: border-top-color 0.8s ease;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            display: none;
+            animation: fadeUp 0.5s ease;
+        }
+
+        .result.show { display: block; }
+
+        .result.success {
+            background: rgba(16,185,129,0.1);
+            border: 1px solid #10b981;
+        }
+
+        .result.error {
+            background: rgba(239,68,68,0.1);
+            border: 1px solid #ef4444;
+        }
+
+        .result h3 {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .result pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 11px;
+            color: var(--text2);
+            font-family: monospace;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 11px;
+            color: #6b7280;
+            animation: fadeIn 1s ease 0.5s both;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .footer span {
+            font-weight: 600;
+            transition: color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 24px; }
+            .main-card { padding: 20px; }
+            .method-btn { font-size: 11px; padding: 10px 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="orb orb-1" id="orb1"></div>
+    <div class="orb orb-2" id="orb2"></div>
+    <div class="orb orb-3" id="orb3"></div>
+
+    <div class="container">
+        <div class="hero">
+            <div class="hero-icon" id="heroIcon">
+                <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
+            </div>
+            <h1 id="heroTitle">AM Premium Activator</h1>
+            <p>Aktivasi Alight Motion Premium dengan mudah</p>
+            <p class="owner">by Dantz 4bigail</p>
+        </div>
+
+        <div class="main-card" id="mainCard">
+            <div class="limit-info" id="limitInfo">
+                <div class="limit-item">
+                    <div class="number" id="limitUsed">0</div>
+                    <div class="label">Terpakai</div>
+                </div>
+                <div class="limit-item">
+                    <div class="number" id="limitTotal">15</div>
+                    <div class="label">Total Limit</div>
+                </div>
+                <div class="limit-item">
+                    <div class="number" id="limitRemaining">15</div>
+                    <div class="label">Sisa</div>
+                </div>
+            </div>
+
+            <div class="method-selector">
+                <button class="method-btn active" data-method="auto" onclick="switchMethod('auto')">
+                    Auto
+                </button>
+                <button class="method-btn" data-method="magic" onclick="switchMethod('magic')">
+                    Magic Link
+                </button>
+                <button class="method-btn" data-method="wizard" onclick="switchMethod('wizard')">
+                    Wizard
+                </button>
+            </div>
+
+            <div class="content-area" id="contentArea">
+                <div id="autoContent">
+                    <h3 class="method-title" id="autoTitle">Aktivasi Otomatis</h3>
+                    <p class="method-desc">Sistem akan membuat akun dan mengaktifkan premium secara otomatis. Menggunakan 3 limit per aktivasi.</p>
+                    
+                    <div class="input-group">
+                        <label>Password Aktivasi</label>
+                        <input type="text" class="input-field" id="passwordAuto" value="alightfree-rafaelxd" placeholder="Masukkan password">
+                    </div>
+                    
+                    <button class="btn-primary btn-green" id="btnAuto" onclick="activateAuto()">Aktivasi Sekarang</button>
+                </div>
+
+                <div id="magicContent" style="display:none;">
+                    <h3 class="method-title" id="magicTitle">Kirim Magic Link</h3>
+                    <p class="method-desc">Link aktivasi akan dikirim ke email kamu. Menggunakan 1 limit per pengiriman.</p>
+                    
+                    <div class="input-group">
+                        <label>Email Tujuan</label>
+                        <input type="email" class="input-field" id="emailMagic" placeholder="nama@email.com">
+                    </div>
+                    
+                    <button class="btn-primary btn-blue" id="btnMagic" onclick="sendMagic()">Kirim Link</button>
+                </div>
+
+                <div id="wizardContent" style="display:none;">
+                    <h3 class="method-title" id="wizardTitle">Wizard 3 Langkah</h3>
+                    <p class="method-desc">Aktivasi manual dengan 3 langkah. Total menggunakan 3 limit.</p>
+                    
+                    <div class="steps">
+                        <div class="step active" id="wStep1">1. Kirim Link</div>
+                        <div class="step" id="wStep2">2. Verifikasi</div>
+                        <div class="step" id="wStep3">3. Apply</div>
+                    </div>
+
+                    <div id="wizardStep1">
+                        <div class="input-group">
+                            <label>Email</label>
+                            <input type="email" class="input-field" id="emailWizard" placeholder="nama@email.com">
+                        </div>
+                        <button class="btn-primary btn-red" onclick="wizardStep1()">Kirim Link</button>
+                    </div>
+
+                    <div id="wizardStep2" style="display:none;">
+                        <div class="input-group">
+                            <label>Raw Link</label>
+                            <input type="text" class="input-field" id="rawLinkWizard" placeholder="Paste link dari email">
+                        </div>
+                        <button class="btn-primary btn-red" onclick="wizardStep2()">Verifikasi</button>
+                    </div>
+
+                    <div id="wizardStep3" style="display:none;">
+                        <div class="input-group">
+                            <label>ID Token</label>
+                            <input type="text" class="input-field" id="idTokenWizard" placeholder="ID Token">
+                        </div>
+                        <button class="btn-primary btn-red" onclick="wizardStep3()">Apply Premium</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner" id="spinner"></div>
+                <p style="color:var(--text2);">Memproses...</p>
+            </div>
+
+            <div class="result" id="result"></div>
+        </div>
+
+        <div class="footer">
+            Created with passion by <span id="footerName">Dantz 4bigail</span> - All rights reserved
+        </div>
+    </div>
+
+    <script>
+        const CONFIG = {
+            BASE_URL: 'https://alightfree.my.id/api/v1',
+            API_KEY: 'alight_live_9fccbbc9ad164d1a937c8c59ba19654f',
+            LIMIT_TOTAL: 15,
+            LIMIT_COST: {
+                'auto-activate': 3,
+                'send-magiclink': 1,
+                'verify-account': 1,
+                'apply-premium': 1
+            }
+        };
+
+        let currentMethod = 'auto';
+        let activationHistory = JSON.parse(localStorage.getItem('am_history') || '[]');
+        let wizardData = {};
+        let isTransitioning = false;
+
+        const themes = {
+            auto: {
+                primary: '#10b981',
+                secondary: '#059669',
+                orb1: '#10b981',
+                orb2: '#059669',
+                orb3: '#34d399'
+            },
+            magic: {
+                primary: '#3b82f6',
+                secondary: '#2563eb',
+                orb1: '#3b82f6',
+                orb2: '#2563eb',
+                orb3: '#60a5fa'
+            },
+            wizard: {
+                primary: '#ef4444',
+                secondary: '#dc2626',
+                orb1: '#ef4444',
+                orb2: '#dc2626',
+                orb3: '#f87171'
+            }
+        };
+
+        function switchMethod(method) {
+            if (isTransitioning || method === currentMethod) return;
+            isTransitioning = true;
+            
+            const theme = themes[method];
+            
+            // Step 1: Fade out ke hitam
+            fadeToBlack(() => {
+                // Step 2: Update theme
+                applyTheme(method, theme);
+                
+                // Update buttons
+                document.querySelectorAll('.method-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.method === method) {
+                        btn.classList.add('active');
+                    }
+                });
+                
+                // Update content
+                document.getElementById('autoContent').style.display = method === 'auto' ? 'block' : 'none';
+                document.getElementById('magicContent').style.display = method === 'magic' ? 'block' : 'none';
+                document.getElementById('wizardContent').style.display = method === 'wizard' ? 'block' : 'none';
+                
+                currentMethod = method;
+                
+                // Reset result
+                document.getElementById('result').className = 'result';
+                document.getElementById('result').style.display = 'none';
+                
+                // Step 3: Fade in ke warna baru
+                setTimeout(fadeInTheme, 100);
+            });
+        }
+
+        function fadeToBlack(callback) {
+            const elements = getTransitionElements();
+            
+            elements.forEach(el => {
+                if (el) {
+                    el.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+                    el.style.opacity = '0';
+                    el.style.filter = 'blur(8px)';
+                    el.style.transform = 'scale(0.95)';
+                }
+            });
+            
+            setTimeout(callback, 500);
+        }
+
+        function applyTheme(method, theme) {
+            // Update orbs
+            document.getElementById('orb1').style.background = theme.orb1;
+            document.getElementById('orb2').style.background = theme.orb2;
+            document.getElementById('orb3').style.background = theme.orb3;
+            
+            // Update hero icon
+            const heroIcon = document.getElementById('heroIcon');
+            heroIcon.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
+            heroIcon.style.boxShadow = `0 20px 60px ${theme.primary}40`;
+            
+            // Update hero title
+            const heroTitle = document.getElementById('heroTitle');
+            heroTitle.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
+            heroTitle.style.webkitBackgroundClip = 'text';
+            heroTitle.style.webkitTextFillColor = 'transparent';
+            
+            // Update limit info
+            const limitInfo = document.getElementById('limitInfo');
+            limitInfo.style.border = `1px solid ${theme.primary}33`;
+            limitInfo.style.background = `${theme.primary}08`;
+            
+            // Update numbers
+            document.querySelectorAll('.limit-item .number').forEach(el => {
+                el.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
+                el.style.webkitBackgroundClip = 'text';
+                el.style.webkitTextFillColor = 'transparent';
+            });
+            
+            // Update method titles
+            document.querySelectorAll('.method-title').forEach(el => {
+                el.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
+                el.style.webkitBackgroundClip = 'text';
+                el.style.webkitTextFillColor = 'transparent';
+            });
+            
+            // Update footer
+            document.getElementById('footerName').style.color = theme.primary;
+            
+            // Update spinner
+            document.getElementById('spinner').style.borderTopColor = theme.primary;
+        }
+
+        function fadeInTheme() {
+            const elements = getTransitionElements();
+            
+            elements.forEach((el, index) => {
+                if (el) {
+                    setTimeout(() => {
+                        el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                        el.style.opacity = '1';
+                        el.style.filter = 'blur(0px)';
+                        el.style.transform = 'scale(1)';
+                    }, index * 80);
+                }
+            });
+            
+            setTimeout(() => {
+                document.getElementById('orb1').style.opacity = '0.2';
+                document.getElementById('orb2').style.opacity = '0.2';
+                document.getElementById('orb3').style.opacity = '0.2';
+                isTransitioning = false;
+            }, 600);
+        }
+
+        function getTransitionElements() {
+            return [
+                document.getElementById('heroIcon'),
+                document.getElementById('heroTitle'),
+                document.getElementById('mainCard'),
+                document.getElementById('limitInfo'),
+                document.getElementById('orb1'),
+                document.getElementById('orb2'),
+                document.getElementById('orb3'),
+                document.getElementById('footerName'),
+                document.querySelectorAll('.limit-item .number')[0],
+                document.querySelectorAll('.limit-item .number')[1],
+                document.querySelectorAll('.limit-item .number')[2]
+            ];
+        }
+
+        function updateLimit() {
+            const used = activationHistory.reduce((total, item) => {
+                return total + (item.limitCost || 0);
+            }, 0);
+            
+            const remaining = Math.max(0, CONFIG.LIMIT_TOTAL - used);
+            
+            document.getElementById('limitUsed').textContent = used;
+            document.getElementById('limitRemaining').textContent = remaining;
+            
+            return remaining;
+        }
+
+        function checkLimit(endpoint) {
+            const cost = CONFIG.LIMIT_COST[endpoint] || 1;
+            const remaining = updateLimit();
+            
+            if (remaining < cost) {
+                showResult('error', { message: `Limit tidak cukup! Butuh ${cost} limit, sisa ${remaining}.` });
+                return false;
+            }
+            
+            return true;
+        }
+
+        function useLimit(endpoint, data) {
+            const cost = CONFIG.LIMIT_COST[endpoint] || 1;
+            
+            activationHistory.unshift({
+                id: Date.now(),
+                email: data.email || 'Unknown',
+                endpoint: endpoint,
+                limitCost: cost,
+                createdAt: new Date().toISOString()
+            });
+            
+            localStorage.setItem('am_history', JSON.stringify(activationHistory));
+            updateLimit();
+            
+            showNotification(`Limit berkurang ${cost} poin!`);
+        }
+
+        async function apiCall(endpoint, data) {
+            const response = await fetch(`${CONFIG.BASE_URL}/${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': CONFIG.API_KEY
+                },
+                body: JSON.stringify(data)
+            });
+            return response.json();
+        }
+
+        async function activateAuto() {
+            const endpoint = 'auto-activate';
+            
+            if (!checkLimit(endpoint)) return;
+            
+            const password = document.getElementById('passwordAuto').value;
+            
+            if (!password) {
+                showResult('error', { message: 'Password wajib diisi' });
+                return;
+            }
+            
+            showLoading();
+            
+            try {
+                const result = await apiCall(endpoint, { password });
+                hideLoading();
+                
+                if (result.success !== false) {
+                    showResult('success', result);
+                    useLimit(endpoint, { email: result.email || result.data?.email });
+                } else {
+                    showResult('error', result);
+                }
+            } catch (error) {
+                hideLoading();
+                showResult('error', { message: error.message });
+            }
+        }
+
+        async function sendMagic() {
+            const endpoint = 'send-magiclink';
+            
+            if (!checkLimit(endpoint)) return;
+            
+            const email = document.getElementById('emailMagic').value;
+            
+            if (!email) {
+                showResult('error', { message: 'Email wajib diisi' });
+                return;
+            }
+            
+            showLoading();
+            
+            try {
+                const result = await apiCall(endpoint, { email });
+                hideLoading();
+                
+                if (result.success !== false) {
+                    showResult('success', result);
+                    useLimit(endpoint, { email });
+                } else {
+                    showResult('error', result);
+                }
+            } catch (error) {
+                hideLoading();
+                showResult('error', { message: error.message });
+            }
+        }
+
+        async function wizardStep1() {
+            const endpoint = 'send-magiclink';
+            
+            if (!checkLimit(endpoint)) return;
+            
+            const email = document.getElementById('emailWizard').value;
+            
+            if (!email) {
+                showResult('error', { message: 'Email wajib diisi' });
+                return;
+            }
+            
+            showLoading();
+            
+            try {
+                const result = await apiCall(endpoint, { email });
+                hideLoading();
+                
+                if (result.success !== false) {
+                    useLimit(endpoint, { email });
+                    wizardData.email = email;
+                    
+                    document.getElementById('wizardStep1').style.display = 'none';
+                    document.getElementById('wizardStep2').style.display = 'block';
+                    document.getElementById('wStep1').className = 'step done';
+                    document.getElementById('wStep2').className = 'step active';
+                    
+                    showResult('success', { message: 'Link terkirim! Cek email kamu.' });
+                } else {
+                    showResult('error', result);
+                }
+            } catch (error) {
+                hideLoading();
+                showResult('error', { message: error.message });
+            }
+        }
+
+        async function wizardStep2() {
+            const endpoint = 'verify-account';
+            
+            if (!checkLimit(endpoint)) return;
+            
+            const rawLink = document.getElementById('rawLinkWizard').value;
+            
+            if (!rawLink) {
+                showResult('error', { message: 'Raw link wajib diisi' });
+                return;
+            }
+            
+            showLoading();
+            
+            try {
+                const result = await apiCall(endpoint, {
+                    email: wizardData.email,
+                    rawLink: rawLink
+                });
+                hideLoading();
+                
+                if (result.success !== false) {
+                    useLimit(endpoint, { email: wizardData.email });
+                    wizardData.idToken = result.idToken;
+                    
+                    document.getElementById('wizardStep2').style.display = 'none';
+                    document.getElementById('wizardStep3').style.display = 'block';
+                    document.getElementById('wStep2').className = 'step done';
+                    document.getElementById('wStep3').className = 'step active';
+                    
+                    if (result.idToken) {
+                        document.getElementById('idTokenWizard').value = result.idToken;
+                    }
+                    
+                    showResult('success', result);
+                } else {
+                    showResult('error', result);
+                }
+            } catch (error) {
+                hideLoading();
+                showResult('error', { message: error.message });
+            }
+        }
+
+        async function wizardStep3() {
+            const endpoint = 'apply-premium';
+            
+            if (!checkLimit(endpoint)) return;
+            
+            const idToken = document.getElementById('idTokenWizard').value;
+            
+            if (!idToken) {
+                showResult('error', { message: 'ID Token wajib diisi' });
+                return;
+            }
+            
+            showLoading();
+            
+            try {
+                const result = await apiCall(endpoint, {
+                    email: wizardData.email,
+                    idToken: idToken
+                });
+                hideLoading();
+                
+                if (result.success !== false) {
+                    useLimit(endpoint, { email: wizardData.email });
+                    document.getElementById('wStep3').className = 'step done';
+                    
+                    showResult('success', result);
+                    
+                    setTimeout(() => {
+                        wizardData = {};
+                        document.getElementById('wizardStep3').style.display = 'none';
+                        document.getElementById('wizardStep1').style.display = 'block';
+                        document.getElementById('wStep1').className = 'step active';
+                        document.getElementById('wStep2').className = 'step';
+                        document.getElementById('wStep3').className = 'step';
+                        document.getElementById('emailWizard').value = '';
+                        document.getElementById('rawLinkWizard').value = '';
+                        document.getElementById('idTokenWizard').value = '';
+                    }, 3000);
+                } else {
+                    showResult('error', result);
+                }
+            } catch (error) {
+                hideLoading();
+                showResult('error', { message: error.message });
+            }
+        }
+
+        function showLoading() {
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('result').className = 'result';
+            document.getElementById('result').style.display = 'none';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').classList.remove('show');
+        }
+
+        function showResult(type, data) {
+            const result = document.getElementById('result');
+            result.className = 'result show ' + (type === 'success' ? 'success' : 'error');
+            result.innerHTML = `
+                <h3>${type === 'success' ? 'Berhasil' : 'Gagal'}</h3>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+            `;
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            const theme = themes[currentMethod];
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--card);
+                border: 1px solid ${theme.primary};
+                border-radius: 10px;
+                padding: 15px 20px;
+                color: white;
+                font-weight: 600;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.3s';
+                setTimeout(() => notification.remove(), 300);
+            }, 2000);
+        }
+
+        // Initialize
+        updateLimit();
+        switchMethod('auto');
+    </script>
+</body>
+</html>
