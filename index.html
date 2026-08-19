@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -196,6 +195,10 @@
             background: linear-gradient(135deg, #ef4444, #dc2626);
         }
 
+        .method-btn[data-method="history"].active {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
         @keyframes scaleIn {
             from { transform: scale(0.95); }
             to { transform: scale(1); }
@@ -348,40 +351,164 @@
             to { transform: rotate(360deg); }
         }
 
-        .result {
-            margin-top: 20px;
-            padding: 20px;
-            border-radius: 12px;
-            display: none;
+        /* History */
+        .history-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 15px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
             animation: fadeUp 0.5s ease;
         }
 
-        .result.show { display: block; }
-
-        .result.success {
-            background: rgba(16,185,129,0.1);
-            border: 1px solid #10b981;
+        .history-item:hover {
+            border-color: var(--border);
+            transform: translateX(5px);
         }
 
-        .result.error {
-            background: rgba(239,68,68,0.1);
-            border: 1px solid #ef4444;
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
         }
 
-        .result h3 {
-            margin-bottom: 10px;
-            font-size: 16px;
+        .history-email {
+            font-weight: 600;
+            font-size: 13px;
         }
 
-        .result pre {
-            white-space: pre-wrap;
-            word-wrap: break-word;
+        .history-method {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .history-method.auto { background: rgba(16,185,129,0.2); color: #10b981; }
+        .history-method.magic { background: rgba(59,130,246,0.2); color: #3b82f6; }
+        .history-method.wizard { background: rgba(239,68,68,0.2); color: #ef4444; }
+
+        .history-details {
             font-size: 11px;
             color: var(--text2);
-            font-family: monospace;
-            max-height: 200px;
-            overflow-y: auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
+
+        .badge {
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .badge.active { background: rgba(16,185,129,0.2); color: #10b981; }
+        .badge.expired { background: rgba(239,68,68,0.2); color: #ef4444; }
+
+        .delete-btn {
+            background: var(--error);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.3s;
+        }
+
+        .delete-btn:hover {
+            opacity: 0.8;
+        }
+
+        /* Popup/Modal */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .popup-overlay.show {
+            display: flex;
+        }
+
+        .popup {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+        }
+
+        .popup-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 30px;
+        }
+
+        .popup-icon.success { background: rgba(16,185,129,0.2); }
+        .popup-icon.error { background: rgba(239,68,68,0.2); }
+        .popup-icon.warning { background: rgba(245,158,11,0.2); }
+        .popup-icon.info { background: rgba(59,130,246,0.2); }
+
+        .popup h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .popup p {
+            font-size: 13px;
+            color: var(--text2);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .popup button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .popup button:hover {
+            transform: translateY(-2px);
+        }
+
+        .popup .btn-close {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .popup .btn-success { background: #10b981; color: white; }
+        .popup .btn-error { background: #ef4444; color: white; }
+        .popup .btn-warning { background: #f59e0b; color: white; }
+        .popup .btn-info { background: #3b82f6; color: white; }
 
         .footer {
             text-align: center;
@@ -401,6 +528,7 @@
             .hero h1 { font-size: 24px; }
             .main-card { padding: 20px; }
             .method-btn { font-size: 11px; padding: 10px 8px; }
+            .history-details { flex-direction: column; gap: 5px; }
         }
     </style>
 </head>
@@ -447,11 +575,15 @@
                 <button class="method-btn" data-method="wizard" onclick="switchMethod('wizard')">
                     Wizard
                 </button>
+                <button class="method-btn" data-method="history" onclick="switchMethod('history')">
+                    History
+                </button>
             </div>
 
             <div class="content-area" id="contentArea">
+                <!-- Auto Method -->
                 <div id="autoContent">
-                    <h3 class="method-title" id="autoTitle">Aktivasi Otomatis</h3>
+                    <h3 class="method-title">Aktivasi Otomatis</h3>
                     <p class="method-desc">Sistem akan membuat akun dan mengaktifkan premium secara otomatis. Menggunakan 3 limit per aktivasi.</p>
                     
                     <div class="input-group">
@@ -459,11 +591,12 @@
                         <input type="text" class="input-field" id="passwordAuto" value="alightfree-rafaelxd" placeholder="Masukkan password">
                     </div>
                     
-                    <button class="btn-primary btn-green" id="btnAuto" onclick="activateAuto()">Aktivasi Sekarang</button>
+                    <button class="btn-primary btn-green" onclick="activateAuto()">Aktivasi Sekarang</button>
                 </div>
 
+                <!-- Magic Link Method -->
                 <div id="magicContent" style="display:none;">
-                    <h3 class="method-title" id="magicTitle">Kirim Magic Link</h3>
+                    <h3 class="method-title">Kirim Magic Link</h3>
                     <p class="method-desc">Link aktivasi akan dikirim ke email kamu. Menggunakan 1 limit per pengiriman.</p>
                     
                     <div class="input-group">
@@ -471,11 +604,12 @@
                         <input type="email" class="input-field" id="emailMagic" placeholder="nama@email.com">
                     </div>
                     
-                    <button class="btn-primary btn-blue" id="btnMagic" onclick="sendMagic()">Kirim Link</button>
+                    <button class="btn-primary btn-blue" onclick="sendMagic()">Kirim Link</button>
                 </div>
 
+                <!-- Wizard Method -->
                 <div id="wizardContent" style="display:none;">
-                    <h3 class="method-title" id="wizardTitle">Wizard 3 Langkah</h3>
+                    <h3 class="method-title">Wizard 3 Langkah</h3>
                     <p class="method-desc">Aktivasi manual dengan 3 langkah. Total menggunakan 3 limit.</p>
                     
                     <div class="steps">
@@ -508,14 +642,21 @@
                         <button class="btn-primary btn-red" onclick="wizardStep3()">Apply Premium</button>
                     </div>
                 </div>
+
+                <!-- History Content -->
+                <div id="historyContent" style="display:none;">
+                    <h3 class="method-title">Riwayat Aktivasi</h3>
+                    <p class="method-desc">Daftar akun yang sudah pernah dibuat menggunakan tools ini.</p>
+                    <div class="history-list" id="historyList">
+                        <p style="color:var(--text2);text-align:center;padding:20px;">Belum ada riwayat</p>
+                    </div>
+                </div>
             </div>
 
             <div class="loading" id="loading">
                 <div class="spinner" id="spinner"></div>
                 <p style="color:var(--text2);">Memproses...</p>
             </div>
-
-            <div class="result" id="result"></div>
         </div>
 
         <div class="footer">
@@ -523,471 +664,549 @@
         </div>
     </div>
 
-    <script>
-        const CONFIG = {
-            BASE_URL: 'https://alightfree.my.id/api/v1',
-            API_KEY: 'alight_live_9fccbbc9ad164d1a937c8c59ba19654f',
-            LIMIT_TOTAL: 15,
-            LIMIT_COST: {
-                'auto-activate': 3,
-                'send-magiclink': 1,
-                'verify-account': 1,
-                'apply-premium': 1
-            }
+    <!-- Popup Modal -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup">
+            <div class="popup-icon" id="popupIcon">✓</div>
+            <h3 id="popupTitle">Sukses</h3>
+            <p id="popupMessage">Operasi berhasil!</p>
+            <button class="btn-close" id="popupBtn" onclick="closePopup()">Tutup</button>
+        </div>
+    </div>
+
+<script>
+    // ============ CONFIGURATION ============
+    const CONFIG = {
+        BASE_URL: 'https://alightfree.my.id/api/v1',
+        API_KEY: 'alight_live_9fccbbc9ad164d1a937c8c59ba19654f',
+        LIMIT_TOTAL: 15,
+        LIMIT_COST: {
+            'auto-activate': 3,
+            'send-magiclink': 1,
+            'verify-account': 1,
+            'apply-premium': 1
+        },
+        TIMEOUT: 15000
+    };
+
+    // ============ STATE ============
+    let currentMethod = 'auto';
+    let activationHistory = JSON.parse(localStorage.getItem('am_history') || '[]');
+    let wizardData = {};
+    let isTransitioning = false;
+
+    // ============ THEMES ============
+    const themes = {
+        auto: { primary: '#10b981', secondary: '#059669', orb1: '#10b981', orb2: '#059669', orb3: '#34d399' },
+        magic: { primary: '#3b82f6', secondary: '#2563eb', orb1: '#3b82f6', orb2: '#2563eb', orb3: '#60a5fa' },
+        wizard: { primary: '#ef4444', secondary: '#dc2626', orb1: '#ef4444', orb2: '#dc2626', orb3: '#f87171' },
+        history: { primary: '#f59e0b', secondary: '#d97706', orb1: '#f59e0b', orb2: '#d97706', orb3: '#fbbf24' }
+    };
+
+    // ============ POPUP ============
+    function showPopup(type, title, message) {
+        const overlay = document.getElementById('popupOverlay');
+        const icon = document.getElementById('popupIcon');
+        const titleEl = document.getElementById('popupTitle');
+        const messageEl = document.getElementById('popupMessage');
+        const btn = document.getElementById('popupBtn');
+        
+        const icons = {
+            success: '✓',
+            error: '✗',
+            warning: '!',
+            info: 'i'
         };
+        
+        icon.className = 'popup-icon ' + type;
+        icon.textContent = icons[type] || 'i';
+        titleEl.textContent = title;
+        messageEl.textContent = message;
+        btn.className = 'btn-' + type;
+        btn.textContent = 'Tutup';
+        btn.onclick = closePopup;
+        
+        overlay.classList.add('show');
+    }
 
-        let currentMethod = 'auto';
-        let activationHistory = JSON.parse(localStorage.getItem('am_history') || '[]');
-        let wizardData = {};
-        let isTransitioning = false;
+    function closePopup() {
+        document.getElementById('popupOverlay').classList.remove('show');
+        // Reset button
+        const btn = document.getElementById('popupBtn');
+        btn.onclick = closePopup;
+        btn.textContent = 'Tutup';
+        
+        // Remove cancel button if exists
+        const cancelBtn = document.getElementById('cancelBtn');
+        if (cancelBtn) cancelBtn.remove();
+    }
 
-        const themes = {
-            auto: {
-                primary: '#10b981',
-                secondary: '#059669',
-                orb1: '#10b981',
-                orb2: '#059669',
-                orb3: '#34d399'
-            },
-            magic: {
-                primary: '#3b82f6',
-                secondary: '#2563eb',
-                orb1: '#3b82f6',
-                orb2: '#2563eb',
-                orb3: '#60a5fa'
-            },
-            wizard: {
-                primary: '#ef4444',
-                secondary: '#dc2626',
-                orb1: '#ef4444',
-                orb2: '#dc2626',
-                orb3: '#f87171'
-            }
-        };
-
-        function switchMethod(method) {
-            if (isTransitioning || method === currentMethod) return;
-            isTransitioning = true;
+    // ============ SWITCH METHOD ============
+    function switchMethod(method) {
+        if (isTransitioning || method === currentMethod) return;
+        isTransitioning = true;
+        
+        const theme = themes[method];
+        
+        fadeToBlack(() => {
+            applyTheme(method, theme);
             
-            const theme = themes[method];
-            
-            // Step 1: Fade out ke hitam
-            fadeToBlack(() => {
-                // Step 2: Update theme
-                applyTheme(method, theme);
-                
-                // Update buttons
-                document.querySelectorAll('.method-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                    if (btn.dataset.method === method) {
-                        btn.classList.add('active');
-                    }
-                });
-                
-                // Update content
-                document.getElementById('autoContent').style.display = method === 'auto' ? 'block' : 'none';
-                document.getElementById('magicContent').style.display = method === 'magic' ? 'block' : 'none';
-                document.getElementById('wizardContent').style.display = method === 'wizard' ? 'block' : 'none';
-                
-                currentMethod = method;
-                
-                // Reset result
-                document.getElementById('result').className = 'result';
-                document.getElementById('result').style.display = 'none';
-                
-                // Step 3: Fade in ke warna baru
-                setTimeout(fadeInTheme, 100);
-            });
-        }
-
-        function fadeToBlack(callback) {
-            const elements = getTransitionElements();
-            
-            elements.forEach(el => {
-                if (el) {
-                    el.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
-                    el.style.opacity = '0';
-                    el.style.filter = 'blur(8px)';
-                    el.style.transform = 'scale(0.95)';
+            document.querySelectorAll('.method-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.method === method) {
+                    btn.classList.add('active');
                 }
             });
             
-            setTimeout(callback, 500);
-        }
-
-        function applyTheme(method, theme) {
-            // Update orbs
-            document.getElementById('orb1').style.background = theme.orb1;
-            document.getElementById('orb2').style.background = theme.orb2;
-            document.getElementById('orb3').style.background = theme.orb3;
+            document.getElementById('autoContent').style.display = method === 'auto' ? 'block' : 'none';
+            document.getElementById('magicContent').style.display = method === 'magic' ? 'block' : 'none';
+            document.getElementById('wizardContent').style.display = method === 'wizard' ? 'block' : 'none';
+            document.getElementById('historyContent').style.display = method === 'history' ? 'block' : 'none';
             
-            // Update hero icon
-            const heroIcon = document.getElementById('heroIcon');
-            heroIcon.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
-            heroIcon.style.boxShadow = `0 20px 60px ${theme.primary}40`;
+            currentMethod = method;
             
-            // Update hero title
-            const heroTitle = document.getElementById('heroTitle');
-            heroTitle.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
-            heroTitle.style.webkitBackgroundClip = 'text';
-            heroTitle.style.webkitTextFillColor = 'transparent';
-            
-            // Update limit info
-            const limitInfo = document.getElementById('limitInfo');
-            limitInfo.style.border = `1px solid ${theme.primary}33`;
-            limitInfo.style.background = `${theme.primary}08`;
-            
-            // Update numbers
-            document.querySelectorAll('.limit-item .number').forEach(el => {
-                el.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
-                el.style.webkitBackgroundClip = 'text';
-                el.style.webkitTextFillColor = 'transparent';
-            });
-            
-            // Update method titles
-            document.querySelectorAll('.method-title').forEach(el => {
-                el.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
-                el.style.webkitBackgroundClip = 'text';
-                el.style.webkitTextFillColor = 'transparent';
-            });
-            
-            // Update footer
-            document.getElementById('footerName').style.color = theme.primary;
-            
-            // Update spinner
-            document.getElementById('spinner').style.borderTopColor = theme.primary;
-        }
-
-        function fadeInTheme() {
-            const elements = getTransitionElements();
-            
-            elements.forEach((el, index) => {
-                if (el) {
-                    setTimeout(() => {
-                        el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-                        el.style.opacity = '1';
-                        el.style.filter = 'blur(0px)';
-                        el.style.transform = 'scale(1)';
-                    }, index * 80);
-                }
-            });
-            
-            setTimeout(() => {
-                document.getElementById('orb1').style.opacity = '0.2';
-                document.getElementById('orb2').style.opacity = '0.2';
-                document.getElementById('orb3').style.opacity = '0.2';
-                isTransitioning = false;
-            }, 600);
-        }
-
-        function getTransitionElements() {
-            return [
-                document.getElementById('heroIcon'),
-                document.getElementById('heroTitle'),
-                document.getElementById('mainCard'),
-                document.getElementById('limitInfo'),
-                document.getElementById('orb1'),
-                document.getElementById('orb2'),
-                document.getElementById('orb3'),
-                document.getElementById('footerName'),
-                document.querySelectorAll('.limit-item .number')[0],
-                document.querySelectorAll('.limit-item .number')[1],
-                document.querySelectorAll('.limit-item .number')[2]
-            ];
-        }
-
-        function updateLimit() {
-            const used = activationHistory.reduce((total, item) => {
-                return total + (item.limitCost || 0);
-            }, 0);
-            
-            const remaining = Math.max(0, CONFIG.LIMIT_TOTAL - used);
-            
-            document.getElementById('limitUsed').textContent = used;
-            document.getElementById('limitRemaining').textContent = remaining;
-            
-            return remaining;
-        }
-
-        function checkLimit(endpoint) {
-            const cost = CONFIG.LIMIT_COST[endpoint] || 1;
-            const remaining = updateLimit();
-            
-            if (remaining < cost) {
-                showResult('error', { message: `Limit tidak cukup! Butuh ${cost} limit, sisa ${remaining}.` });
-                return false;
+            if (method === 'history') {
+                renderHistory();
             }
             
-            return true;
-        }
+            setTimeout(fadeInTheme, 100);
+        });
+    }
 
-        function useLimit(endpoint, data) {
-            const cost = CONFIG.LIMIT_COST[endpoint] || 1;
-            
-            activationHistory.unshift({
-                id: Date.now(),
-                email: data.email || 'Unknown',
-                endpoint: endpoint,
-                limitCost: cost,
-                createdAt: new Date().toISOString()
-            });
-            
-            localStorage.setItem('am_history', JSON.stringify(activationHistory));
-            updateLimit();
-            
-            showNotification(`Limit berkurang ${cost} poin!`);
-        }
+    // ============ TRANSITIONS ============
+    function fadeToBlack(callback) {
+        const elements = getTransitionElements();
+        
+        elements.forEach(el => {
+            if (el) {
+                el.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+                el.style.opacity = '0';
+                el.style.filter = 'blur(8px)';
+                el.style.transform = 'scale(0.95)';
+            }
+        });
+        
+        setTimeout(callback, 500);
+    }
 
-        async function apiCall(endpoint, data) {
+    function applyTheme(method, theme) {
+        document.getElementById('orb1').style.background = theme.orb1;
+        document.getElementById('orb2').style.background = theme.orb2;
+        document.getElementById('orb3').style.background = theme.orb3;
+        
+        const heroIcon = document.getElementById('heroIcon');
+        heroIcon.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
+        heroIcon.style.boxShadow = `0 20px 60px ${theme.primary}40`;
+        
+        const heroTitle = document.getElementById('heroTitle');
+        heroTitle.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
+        heroTitle.style.webkitBackgroundClip = 'text';
+        heroTitle.style.webkitTextFillColor = 'transparent';
+        
+        const limitInfo = document.getElementById('limitInfo');
+        limitInfo.style.border = `1px solid ${theme.primary}33`;
+        limitInfo.style.background = `${theme.primary}08`;
+        
+        document.querySelectorAll('.limit-item .number').forEach(el => {
+            el.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
+            el.style.webkitBackgroundClip = 'text';
+            el.style.webkitTextFillColor = 'transparent';
+        });
+        
+        document.querySelectorAll('.method-title').forEach(el => {
+            el.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
+            el.style.webkitBackgroundClip = 'text';
+            el.style.webkitTextFillColor = 'transparent';
+        });
+        
+        document.getElementById('footerName').style.color = theme.primary;
+        document.getElementById('spinner').style.borderTopColor = theme.primary;
+    }
+
+    function fadeInTheme() {
+        const elements = getTransitionElements();
+        
+        elements.forEach((el, index) => {
+            if (el) {
+                setTimeout(() => {
+                    el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                    el.style.opacity = '1';
+                    el.style.filter = 'blur(0px)';
+                    el.style.transform = 'scale(1)';
+                }, index * 80);
+            }
+        });
+        
+        setTimeout(() => {
+            document.getElementById('orb1').style.opacity = '0.2';
+            document.getElementById('orb2').style.opacity = '0.2';
+            document.getElementById('orb3').style.opacity = '0.2';
+            isTransitioning = false;
+        }, 600);
+    }
+
+    function getTransitionElements() {
+        return [
+            document.getElementById('heroIcon'),
+            document.getElementById('heroTitle'),
+            document.getElementById('mainCard'),
+            document.getElementById('limitInfo'),
+            document.getElementById('orb1'),
+            document.getElementById('orb2'),
+            document.getElementById('orb3'),
+            document.getElementById('footerName')
+        ];
+    }
+
+    // ============ LIMIT ============
+    function updateLimit() {
+        const used = activationHistory.reduce((total, item) => total + (item.limitCost || 0), 0);
+        const remaining = Math.max(0, CONFIG.LIMIT_TOTAL - used);
+        document.getElementById('limitUsed').textContent = used;
+        document.getElementById('limitRemaining').textContent = remaining;
+        return remaining;
+    }
+
+    function checkLimit(endpoint) {
+        const cost = CONFIG.LIMIT_COST[endpoint] || 1;
+        const remaining = updateLimit();
+        
+        if (remaining < cost) {
+            showPopup('warning', 'Limit Tidak Cukup', `Butuh ${cost} limit, sisa ${remaining} limit.`);
+            return false;
+        }
+        
+        return true;
+    }
+
+    function useLimit(endpoint, data) {
+        const cost = CONFIG.LIMIT_COST[endpoint] || 1;
+        
+        let methodName = 'auto';
+        if (endpoint === 'auto-activate') methodName = 'auto';
+        else if (endpoint === 'send-magiclink') methodName = 'magic';
+        else if (endpoint === 'verify-account' || endpoint === 'apply-premium') methodName = 'wizard';
+        
+        activationHistory.unshift({
+            id: Date.now(),
+            email: data.email || 'Unknown',
+            password: data.password || '-',
+            endpoint: endpoint,
+            method: methodName,
+            limitCost: cost,
+            createdAt: new Date().toISOString(),
+            expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+            status: 'active'
+        });
+        
+        localStorage.setItem('am_history', JSON.stringify(activationHistory));
+        updateLimit();
+    }
+
+    // ============ HISTORY ============
+    function renderHistory() {
+        const list = document.getElementById('historyList');
+        
+        if (activationHistory.length === 0) {
+            list.innerHTML = '<p style="color:var(--text2);text-align:center;padding:20px;">Belum ada riwayat aktivasi</p>';
+            return;
+        }
+        
+        list.innerHTML = activationHistory.map(item => {
+            const status = item.status || 'active';
+            const methodClass = item.method || 'auto';
+            const safePassword = (item.password || '-').replace(/'/g, "\\'");
+            
+            return `
+                <div class="history-item">
+                    <div class="history-header">
+                        <span class="history-email">${item.email}</span>
+                        <span class="history-method ${methodClass}">${methodClass}</span>
+                    </div>
+                    <div class="history-details">
+                        <span>Password: ${item.password === '-' ? '-' : '<span onclick="togglePassword(this, \'' + safePassword + '\')" style="cursor:pointer;">••••••••</span>'}</span>
+                        <span>Dibuat: ${new Date(item.createdAt).toLocaleDateString('id-ID')}</span>
+                        <span>Expired: ${new Date(item.expiresAt).toLocaleDateString('id-ID')}</span>
+                        <span class="badge ${status}">${status === 'active' ? 'Aktif' : 'Expired'}</span>
+                        <button class="delete-btn" onclick="deleteHistory(${item.id})">Hapus</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function togglePassword(el, password) {
+        el.textContent = el.textContent === '••••••••' ? password : '••••••••';
+    }
+
+    function deleteHistory(id) {
+        activationHistory = activationHistory.filter(item => item.id !== id);
+        localStorage.setItem('am_history', JSON.stringify(activationHistory));
+        updateLimit();
+        renderHistory();
+        showPopup('info', 'History Dihapus', 'Riwayat aktivasi berhasil dihapus.');
+    }
+
+    // ============ VALIDATION ============
+    function isValidEmail(email) {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    }
+
+    function isValidPassword(password) {
+        return password && password.length >= 3;
+    }
+
+    // ============ API ============
+    async function apiCall(endpoint, data) {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), CONFIG.TIMEOUT);
+        
+        try {
             const response = await fetch(`${CONFIG.BASE_URL}/${endpoint}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'x-api-key': CONFIG.API_KEY
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
+                signal: controller.signal
             });
-            return response.json();
+            
+            clearTimeout(timeout);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            
+            return await response.json();
+            
+        } catch (error) {
+            clearTimeout(timeout);
+            if (error.name === 'AbortError') {
+                throw new Error('Timeout! Server tidak merespon.');
+            }
+            throw error;
         }
+    }
 
-        async function activateAuto() {
-            const endpoint = 'auto-activate';
-            
-            if (!checkLimit(endpoint)) return;
-            
-            const password = document.getElementById('passwordAuto').value;
-            
-            if (!password) {
-                showResult('error', { message: 'Password wajib diisi' });
-                return;
-            }
-            
-            showLoading();
-            
-            try {
-                const result = await apiCall(endpoint, { password });
-                hideLoading();
-                
-                if (result.success !== false) {
-                    showResult('success', result);
-                    useLimit(endpoint, { email: result.email || result.data?.email });
-                } else {
-                    showResult('error', result);
-                }
-            } catch (error) {
-                hideLoading();
-                showResult('error', { message: error.message });
-            }
+    function isSuccess(result) {
+        if (!result) return false;
+        if (result.success === true) return true;
+        if (result.status === 'success') return true;
+        if (result.error === null && result.data) return true;
+        return false;
+    }
+
+    // ============ ACTIVATION ============
+    async function activateAuto() {
+        const endpoint = 'auto-activate';
+        
+        if (!checkLimit(endpoint)) return;
+        
+        const password = document.getElementById('passwordAuto').value;
+        
+        if (!isValidPassword(password)) {
+            showPopup('warning', 'Password Tidak Valid', 'Password minimal 3 karakter!');
+            return;
         }
-
-        async function sendMagic() {
-            const endpoint = 'send-magiclink';
+        
+        showLoading();
+        
+        try {
+            const result = await apiCall(endpoint, { password });
+            hideLoading();
             
-            if (!checkLimit(endpoint)) return;
-            
-            const email = document.getElementById('emailMagic').value;
-            
-            if (!email) {
-                showResult('error', { message: 'Email wajib diisi' });
-                return;
-            }
-            
-            showLoading();
-            
-            try {
-                const result = await apiCall(endpoint, { email });
-                hideLoading();
-                
-                if (result.success !== false) {
-                    showResult('success', result);
-                    useLimit(endpoint, { email });
-                } else {
-                    showResult('error', result);
-                }
-            } catch (error) {
-                hideLoading();
-                showResult('error', { message: error.message });
-            }
-        }
-
-        async function wizardStep1() {
-            const endpoint = 'send-magiclink';
-            
-            if (!checkLimit(endpoint)) return;
-            
-            const email = document.getElementById('emailWizard').value;
-            
-            if (!email) {
-                showResult('error', { message: 'Email wajib diisi' });
-                return;
-            }
-            
-            showLoading();
-            
-            try {
-                const result = await apiCall(endpoint, { email });
-                hideLoading();
-                
-                if (result.success !== false) {
-                    useLimit(endpoint, { email });
-                    wizardData.email = email;
-                    
-                    document.getElementById('wizardStep1').style.display = 'none';
-                    document.getElementById('wizardStep2').style.display = 'block';
-                    document.getElementById('wStep1').className = 'step done';
-                    document.getElementById('wStep2').className = 'step active';
-                    
-                    showResult('success', { message: 'Link terkirim! Cek email kamu.' });
-                } else {
-                    showResult('error', result);
-                }
-            } catch (error) {
-                hideLoading();
-                showResult('error', { message: error.message });
-            }
-        }
-
-        async function wizardStep2() {
-            const endpoint = 'verify-account';
-            
-            if (!checkLimit(endpoint)) return;
-            
-            const rawLink = document.getElementById('rawLinkWizard').value;
-            
-            if (!rawLink) {
-                showResult('error', { message: 'Raw link wajib diisi' });
-                return;
-            }
-            
-            showLoading();
-            
-            try {
-                const result = await apiCall(endpoint, {
-                    email: wizardData.email,
-                    rawLink: rawLink
+            if (isSuccess(result)) {
+                useLimit(endpoint, { 
+                    email: result.email || result.data?.email || 'Unknown',
+                    password: password
                 });
-                hideLoading();
+                showPopup('success', 'Aktivasi Berhasil', 'Alight Motion Premium berhasil diaktifkan!');
+            } else {
+                showPopup('error', 'Aktivasi Gagal', result.message || result.error || 'Terjadi kesalahan.');
+            }
+        } catch (error) {
+            hideLoading();
+            showPopup('error', 'Error', error.message);
+        }
+    }
+
+    async function sendMagic() {
+        const endpoint = 'send-magiclink';
+        
+        if (!checkLimit(endpoint)) return;
+        
+        const email = document.getElementById('emailMagic').value;
+        
+        if (!isValidEmail(email)) {
+            showPopup('warning', 'Email Tidak Valid', 'Masukkan email yang benar!');
+            return;
+        }
+        
+        showLoading();
+        
+        try {
+            const result = await apiCall(endpoint, { email });
+            hideLoading();
+            
+            if (isSuccess(result)) {
+                useLimit(endpoint, { email, password: '-' });
+                showPopup('success', 'Link Terkirim', 'Cek email kamu untuk link aktivasi.');
+            } else {
+                showPopup('error', 'Gagal', result.message || result.error || 'Gagal mengirim link.');
+            }
+        } catch (error) {
+            hideLoading();
+            showPopup('error', 'Error', error.message);
+        }
+    }
+
+    async function wizardStep1() {
+        const endpoint = 'send-magiclink';
+        
+        if (!checkLimit(endpoint)) return;
+        
+        const email = document.getElementById('emailWizard').value;
+        
+        if (!isValidEmail(email)) {
+            showPopup('warning', 'Email Tidak Valid', 'Masukkan email yang benar!');
+            return;
+        }
+        
+        showLoading();
+        
+        try {
+            const result = await apiCall(endpoint, { email });
+            hideLoading();
+            
+            if (isSuccess(result)) {
+                useLimit(endpoint, { email, password: '-' });
+                wizardData.email = email;
                 
-                if (result.success !== false) {
-                    useLimit(endpoint, { email: wizardData.email });
-                    wizardData.idToken = result.idToken;
-                    
-                    document.getElementById('wizardStep2').style.display = 'none';
-                    document.getElementById('wizardStep3').style.display = 'block';
-                    document.getElementById('wStep2').className = 'step done';
-                    document.getElementById('wStep3').className = 'step active';
-                    
-                    if (result.idToken) {
-                        document.getElementById('idTokenWizard').value = result.idToken;
-                    }
-                    
-                    showResult('success', result);
-                } else {
-                    showResult('error', result);
-                }
-            } catch (error) {
-                hideLoading();
-                showResult('error', { message: error.message });
-            }
-        }
-
-        async function wizardStep3() {
-            const endpoint = 'apply-premium';
-            
-            if (!checkLimit(endpoint)) return;
-            
-            const idToken = document.getElementById('idTokenWizard').value;
-            
-            if (!idToken) {
-                showResult('error', { message: 'ID Token wajib diisi' });
-                return;
-            }
-            
-            showLoading();
-            
-            try {
-                const result = await apiCall(endpoint, {
-                    email: wizardData.email,
-                    idToken: idToken
-                });
-                hideLoading();
+                document.getElementById('wizardStep1').style.display = 'none';
+                document.getElementById('wizardStep2').style.display = 'block';
+                document.getElementById('wStep1').className = 'step done';
+                document.getElementById('wStep2').className = 'step active';
                 
-                if (result.success !== false) {
-                    useLimit(endpoint, { email: wizardData.email });
-                    document.getElementById('wStep3').className = 'step done';
-                    
-                    showResult('success', result);
-                    
-                    setTimeout(() => {
-                        wizardData = {};
-                        document.getElementById('wizardStep3').style.display = 'none';
-                        document.getElementById('wizardStep1').style.display = 'block';
-                        document.getElementById('wStep1').className = 'step active';
-                        document.getElementById('wStep2').className = 'step';
-                        document.getElementById('wStep3').className = 'step';
-                        document.getElementById('emailWizard').value = '';
-                        document.getElementById('rawLinkWizard').value = '';
-                        document.getElementById('idTokenWizard').value = '';
-                    }, 3000);
-                } else {
-                    showResult('error', result);
-                }
-            } catch (error) {
-                hideLoading();
-                showResult('error', { message: error.message });
+                showPopup('success', 'Link Terkirim', 'Cek email kamu untuk link verifikasi.');
+            } else {
+                showPopup('error', 'Gagal', result.message || result.error || 'Gagal mengirim link.');
             }
+        } catch (error) {
+            hideLoading();
+            showPopup('error', 'Error', error.message);
         }
+    }
 
-        function showLoading() {
-            document.getElementById('loading').classList.add('show');
-            document.getElementById('result').className = 'result';
-            document.getElementById('result').style.display = 'none';
+    async function wizardStep2() {
+        const endpoint = 'verify-account';
+        
+        if (!checkLimit(endpoint)) return;
+        
+        const rawLink = document.getElementById('rawLinkWizard').value.trim();
+        
+        if (!rawLink) {
+            showPopup('warning', 'Input Kosong', 'Raw link wajib diisi!');
+            return;
         }
-
-        function hideLoading() {
-            document.getElementById('loading').classList.remove('show');
-        }
-
-        function showResult(type, data) {
-            const result = document.getElementById('result');
-            result.className = 'result show ' + (type === 'success' ? 'success' : 'error');
-            result.innerHTML = `
-                <h3>${type === 'success' ? 'Berhasil' : 'Gagal'}</h3>
-                <pre>${JSON.stringify(data, null, 2)}</pre>
-            `;
-        }
-
-        function showNotification(message) {
-            const notification = document.createElement('div');
-            const theme = themes[currentMethod];
+        
+        showLoading();
+        
+        try {
+            const result = await apiCall(endpoint, {
+                email: wizardData.email,
+                rawLink: rawLink
+            });
+            hideLoading();
             
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: var(--card);
-                border: 1px solid ${theme.primary};
-                border-radius: 10px;
-                padding: 15px 20px;
-                color: white;
-                font-weight: 600;
-                z-index: 9999;
-                animation: slideIn 0.3s ease;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            `;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.opacity = '0';
-                notification.style.transition = 'opacity 0.3s';
-                setTimeout(() => notification.remove(), 300);
-            }, 2000);
+            if (isSuccess(result)) {
+                useLimit(endpoint, { email: wizardData.email, password: '-' });
+                wizardData.idToken = result.idToken || result.data?.idToken;
+                
+                if (!wizardData.idToken) {
+                    showPopup('error', 'Token Tidak Ditemukan', 'Server tidak mengembalikan idToken!');
+                    return;
+                }
+                
+                document.getElementById('wizardStep2').style.display = 'none';
+                document.getElementById('wizardStep3').style.display = 'block';
+                document.getElementById('wStep2').className = 'step done';
+                document.getElementById('wStep3').className = 'step active';
+                
+                document.getElementById('idTokenWizard').value = wizardData.idToken;
+                
+                showPopup('success', 'Verifikasi Berhasil', 'Akun berhasil diverifikasi!');
+            } else {
+                showPopup('error', 'Verifikasi Gagal', result.message || result.error || 'Link tidak valid.');
+            }
+        } catch (error) {
+            hideLoading();
+            showPopup('error', 'Error', error.message);
         }
+    }
 
-        // Initialize
-        updateLimit();
-        switchMethod('auto');
-    </script>
+    async function wizardStep3() {
+        const endpoint = 'apply-premium';
+        
+        if (!checkLimit(endpoint)) return;
+        
+        const idToken = document.getElementById('idTokenWizard').value.trim();
+        
+        if (!idToken) {
+            showPopup('warning', 'Input Kosong', 'ID Token wajib diisi!');
+            return;
+        }
+        
+        showLoading();
+        
+        try {
+            const result = await apiCall(endpoint, {
+                email: wizardData.email,
+                idToken: idToken
+            });
+            hideLoading();
+            
+            if (isSuccess(result)) {
+                useLimit(endpoint, { email: wizardData.email, password: '-' });
+                document.getElementById('wStep3').className = 'step done';
+                
+                showPopup('success', 'Premium Aktif', 'Alight Motion Premium berhasil diaktifkan!');
+                
+                setTimeout(resetWizard, 2000);
+            } else {
+                showPopup('error', 'Gagal', result.message || result.error || 'Gagal apply premium.');
+            }
+        } catch (error) {
+            hideLoading();
+            showPopup('error', 'Error', error.message);
+        }
+    }
+
+    function resetWizard() {
+        wizardData = {};
+        document.getElementById('wizardStep3').style.display = 'none';
+        document.getElementById('wizardStep1').style.display = 'block';
+        document.getElementById('wStep1').className = 'step active';
+        document.getElementById('wStep2').className = 'step';
+        document.getElementById('wStep3').className = 'step';
+        document.getElementById('emailWizard').value = '';
+        document.getElementById('rawLinkWizard').value = '';
+        document.getElementById('idTokenWizard').value = '';
+    }
+
+    // ============ LOADING ============
+    function showLoading() {
+        document.getElementById('loading').classList.add('show');
+    }
+
+    function hideLoading() {
+        document.getElementById('loading').classList.remove('show');
+    }
+
+    // ============ INITIALIZE ============
+    updateLimit();
+    switchMethod('auto');
+</script>
 </body>
 </html>
