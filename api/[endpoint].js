@@ -1,5 +1,5 @@
 const API_KEY = 'alight_live_48243cc94c0c517ee76e91abc4bd1a69';
-const BASE_URL = 'https://alightfree.my.id/api/v1';
+const BASE_URL = '/api';
 
 const ALLOWED_ENDPOINTS = [
   'send-data',
